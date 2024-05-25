@@ -7,6 +7,8 @@ import lombok.*;
 import sehmus.school_management_system.model.enums.Gender;
 
 import java.time.LocalDate;
+import java.util.Set;
+
 @Entity
 @Table(name = "t_users")
 @Getter
@@ -61,5 +63,9 @@ public class User {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private UserRole userRole;
 
-
+    @ManyToMany
+    @JoinTable(name = "user_lessonProgram",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "lesson_program_id"))
+    private Set<LessonProgram> lessonProgramList;
 }
