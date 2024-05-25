@@ -1,4 +1,4 @@
-package sehmus.school_management_system.model.enums;
+package sehmus.school_management_system.models.enums;
 
 import lombok.Getter;
 

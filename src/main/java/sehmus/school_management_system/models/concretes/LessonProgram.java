@@ -1,10 +1,10 @@
-package sehmus.school_management_system.model.concretes;
+package sehmus.school_management_system.models.concretes;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
-import sehmus.school_management_system.model.enums.Day;
+import sehmus.school_management_system.models.enums.Day;
 
 import java.time.LocalTime;
 import java.util.Set;

@@ -1,4 +1,4 @@
-package sehmus.school_management_system.model.concretes;
+package sehmus.school_management_system.models.concretes;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import sehmus.school_management_system.model.enums.Term;
+import sehmus.school_management_system.models.enums.Term;
 
 import java.time.LocalDate;
 import java.util.List;

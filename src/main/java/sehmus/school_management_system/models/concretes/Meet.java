@@ -1,4 +1,4 @@
-package sehmus.school_management_system.model.concretes;
+package sehmus.school_management_system.models.concretes;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;

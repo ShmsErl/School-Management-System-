@@ -1,4 +1,4 @@
-package sehmus.school_management_system.model.concretes;
+package sehmus.school_management_system.models.concretes;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import sehmus.school_management_system.model.enums.Note;
+import sehmus.school_management_system.models.enums.Note;
 
 @Entity
 @Data
