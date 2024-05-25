@@ -57,4 +57,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
+    @OneToOne()
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private UserRole userRole;
+
+
 }
