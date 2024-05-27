@@ -2,6 +2,8 @@ package sehmus.school_management_system.services.business;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import sehmus.school_management_system.exception.ResourceNotFoundException;
@@ -145,6 +147,14 @@ public class MeetingService {
         return meetingRepository.findByStudentList_IdEquals(student.getId())
                 .stream().map(meetingMapper::mapMeetToMeetingResponse)
                 .collect(Collectors.toList());
+
+    }
+
+    public Page<MeetingResponse> getAllByPage(int page, int size) {
+
+        Pageable pageable = pageableHelper.getPageableWithProperties(page, size);
+
+        return meetingRepository.findAll(pageable).map(meetingMapper::mapMeetToMeetingResponse);
 
     }
 
