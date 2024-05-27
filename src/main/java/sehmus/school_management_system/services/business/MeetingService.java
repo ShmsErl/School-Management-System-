@@ -4,9 +4,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import sehmus.school_management_system.exception.ResourceNotFoundException;
 import sehmus.school_management_system.models.concretes.Meet;
 import sehmus.school_management_system.models.concretes.User;
 import sehmus.school_management_system.payload.mappers.MeetingMapper;
+import sehmus.school_management_system.payload.messages.ErrorMessages;
 import sehmus.school_management_system.payload.messages.SuccessMessages;
 import sehmus.school_management_system.payload.requests.concretes.MeetingRequest;
 import sehmus.school_management_system.payload.responses.concretes.MeetingResponse;
@@ -103,6 +105,24 @@ public class MeetingService {
         return meetingRepository.findAll().stream()
                 .map(meetingMapper::mapMeetToMeetingResponse)
                 .collect(Collectors.toList());
+    }
+
+    public ResponseMessage deleteById(Long id) {
+
+        meetingExistById(id);
+        meetingRepository.deleteById(id);
+        return ResponseMessage.builder()
+                .message(SuccessMessages.MEET_DELETE)
+                .httpStatus(HttpStatus.OK)
+                .build();
+    }
+
+    public Meet meetingExistById(Long id){
+
+        return meetingRepository.findById(id).orElseThrow(
+                ()-> new ResourceNotFoundException(String.format(ErrorMessages.MEET_NOT_FOUND_MESSAGE, id))
+        );
+
     }
 
 }
