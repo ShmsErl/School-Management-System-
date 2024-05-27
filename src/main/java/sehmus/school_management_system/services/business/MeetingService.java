@@ -69,4 +69,32 @@ public class MeetingService {
 
     }
 
+
+    public ResponseMessage<MeetingResponse> updateMeeting(MeetingRequest meetingRequest,
+                                                          Long meetingId,
+                                                          HttpServletRequest httpServletRequest) {
+        Meet meet = meetingExistById(meetingId);
+        meetingHelper.isMeetingMatchedWithTeacher(meet, httpServletRequest);
+        dateTimeValidator.checkTimeWithException(meetingRequest.getStartTime(), meetingRequest.getStopTime());
+        meetingHelper.checkMeetingConflicts(meetingRequest.getStudentIds(), meet.getAdvisoryTeacher().getId(),
+                meetingRequest.getDate(), meetingRequest.getStartTime(), meetingRequest.getStopTime());
+
+        List<User> students = methodHelper.getUserList(meetingRequest.getStudentIds());
+
+        Meet meetToUpdate = meetingMapper.mapMeetingRequestToMeet(meetingRequest);
+
+        meetToUpdate.setStudentList(students);
+        meetToUpdate.setAdvisoryTeacher(meet.getAdvisoryTeacher());
+        meetToUpdate.setId(meetingId);
+
+        Meet updatedMeet = meetingRepository.save(meetToUpdate);
+
+        return ResponseMessage.<MeetingResponse>builder()
+                .message(SuccessMessages.MEET_UPDATE)
+                .httpStatus(HttpStatus.OK)
+                .returnBody(meetingMapper.mapMeetToMeetingResponse(updatedMeet))
+                .build();
+
+    }
+
 }
