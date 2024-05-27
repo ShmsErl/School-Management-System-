@@ -163,5 +163,18 @@ public class StudentInfoService {
 
     }
 
+    public ResponseMessage deleteStudentInfo(Long id) {
+
+        isStudentInfoExists(id);
+
+        studentInfoRepository.deleteById(id);
+
+        return ResponseMessage.builder()
+                .message(SuccessMessages.STUDENT_INFO_DELETE)
+                .httpStatus(HttpStatus.OK)
+                .build();
+
+    }
+
 
 }
