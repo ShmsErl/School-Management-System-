@@ -125,4 +125,16 @@ public class MeetingService {
 
     }
 
+    public List<MeetingResponse> getAllMeetingsByLoggedInTeacher(HttpServletRequest httpServletRequest) {
+
+        String username = (String) httpServletRequest.getAttribute("username");
+        User teacher = methodHelper.loadUserByName(username);
+        methodHelper.checkIsAdvisor(teacher);
+
+        return meetingRepository.getByAdvisoryTeacher_IdEquals(teacher.getId())
+                .stream().map(meetingMapper::mapMeetToMeetingResponse)
+                .collect(Collectors.toList());
+
+    }
+
 }
