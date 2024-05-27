@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import sehmus.school_management_system.exception.ConflictException;
+import sehmus.school_management_system.exception.ResourceNotFoundException;
 import sehmus.school_management_system.models.concretes.EducationTerm;
 import sehmus.school_management_system.models.concretes.Lesson;
 import sehmus.school_management_system.models.concretes.StudentInfo;
@@ -21,6 +22,8 @@ import sehmus.school_management_system.payload.responses.concretes.StudentInfoRe
 import sehmus.school_management_system.repositories.StudentInfoRepository;
 import sehmus.school_management_system.services.helper.MethodHelper;
 import sehmus.school_management_system.services.helper.PageableHelper;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -115,6 +118,19 @@ public class StudentInfoService {
         } else {
             return Note.AA;
         }
+    }
+
+
+    public StudentInfo isStudentInfoExists(Long id){
+
+        Optional<StudentInfo> studentInfoOptional = studentInfoRepository.findById(id);
+
+        if (studentInfoOptional.isPresent()){
+
+            return studentInfoOptional.get();
+
+        } else throw new ResourceNotFoundException(String.format(ErrorMessages.STUDENT_INFO_NOT_FOUND, id));
+
     }
 
 }
