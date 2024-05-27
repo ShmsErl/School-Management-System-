@@ -3,6 +3,7 @@ package sehmus.school_management_system.services.user;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import sehmus.school_management_system.exception.ResourceNotFoundException;
 import sehmus.school_management_system.models.concretes.User;
@@ -11,6 +12,7 @@ import sehmus.school_management_system.payload.mappers.UserMapper;
 import sehmus.school_management_system.payload.messages.ErrorMessages;
 import sehmus.school_management_system.payload.messages.SuccessMessages;
 import sehmus.school_management_system.payload.requests.concretes.UserRequest;
+import sehmus.school_management_system.payload.responses.abstracts.BaseUserResponse;
 import sehmus.school_management_system.payload.responses.concretes.ResponseMessage;
 import sehmus.school_management_system.payload.responses.concretes.UserResponse;
 import sehmus.school_management_system.repositories.UserRepository;
@@ -18,7 +20,9 @@ import sehmus.school_management_system.services.helper.MethodHelper;
 import sehmus.school_management_system.services.helper.PageableHelper;
 import sehmus.school_management_system.services.validator.UniquePropertyValidator;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -73,6 +77,28 @@ public class UserService {
         Pageable pageable = pageableHelper.getPageableWithProperties(page, size, sort, type);
 
         return userRepository.findByUserByRole(userRole, pageable).map(userMapper::mapUserToUserResponse);
+
+    }
+
+    public ResponseMessage<BaseUserResponse> getUserById(Long userId) {
+
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new ResourceNotFoundException(String.format(ErrorMessages.NOT_FOUND_USER_MESSAGE, userId))
+        );
+
+        return ResponseMessage.<BaseUserResponse>builder()
+                .message(SuccessMessages.USER_FOUND)
+                .returnBody(userMapper.mapUserToUserResponse(user))
+                .httpStatus(HttpStatus.OK)
+                .build();
+
+
+    }
+
+    public List<UserResponse> getUserByName(String userName) {
+
+        return userRepository.findUserByNameContainingIgnoreCase(userName).stream()
+                .map(userMapper::mapUserToUserResponse).collect(Collectors.toList());
 
     }
 
