@@ -3,6 +3,8 @@ package sehmus.school_management_system.services.business;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import sehmus.school_management_system.exception.ConflictException;
@@ -24,7 +26,9 @@ import sehmus.school_management_system.repositories.StudentInfoRepository;
 import sehmus.school_management_system.services.helper.MethodHelper;
 import sehmus.school_management_system.services.helper.PageableHelper;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -175,6 +179,34 @@ public class StudentInfoService {
                 .build();
 
     }
+
+    public Page<StudentInfoResponse> findStudentInfoByPage(int page, int size, String sort, String type) {
+
+        Pageable pageable = pageableHelper.getPageableWithProperties(page, size, sort, type);
+
+        return studentInfoRepository.findAll(pageable).map(studentInfoMapper::mapStudentInfoToStudentInfoResponse);
+
+    }
+
+    public StudentInfoResponse findStudentInfoById(Long id) {
+
+        return studentInfoMapper.mapStudentInfoToStudentInfoResponse(isStudentInfoExists(id));
+
+    }
+
+    public List<StudentInfoResponse> findStudentInfoByStudentId(Long studentId) {
+
+        User student = methodHelper.isUserExist(studentId);
+
+        methodHelper.checkRole(student, RoleType.STUDENT);
+
+        return studentInfoRepository.findByStudentId(studentId)
+                .stream()
+                .map(studentInfoMapper::mapStudentInfoToStudentInfoResponse)
+                .collect(Collectors.toList());
+
+    }
+
 
 
 }
