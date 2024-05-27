@@ -20,6 +20,7 @@ import sehmus.school_management_system.services.helper.MethodHelper;
 import sehmus.school_management_system.services.validator.DateTimeValidator;
 import sehmus.school_management_system.services.validator.UniquePropertyValidator;
 
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -74,6 +75,32 @@ public class TeacherService {
                 .returnBody(userMapper.mapUserToUserResponse(savedTeacher))
                 .build();
     }
+
+    public ResponseMessage<UserResponse> changeAdvisorTeacherStatus(Long id) {
+
+        User teacher = methodHelper.isUserExist(id);
+        methodHelper.checkRole(teacher, RoleType.TEACHER);
+        methodHelper.checkIsAdvisor(teacher);
+
+        teacher.setIsAdvisor(false);
+        userRepository.save(teacher);
+
+        List<User> allStudents = userRepository.findByAdvisorTeacherId(id);
+
+        if (!allStudents.isEmpty()){
+
+            allStudents.forEach(students -> students.setAdvisorTeacherId(null));
+
+        }
+
+        return ResponseMessage.<UserResponse>builder()
+                .message(SuccessMessages.ADVISOR_TEACHER_DELETE)
+                .returnBody(userMapper.mapUserToUserResponse(teacher))
+                .httpStatus(HttpStatus.OK)
+                .build();
+
+    }
+
 
 
 }
