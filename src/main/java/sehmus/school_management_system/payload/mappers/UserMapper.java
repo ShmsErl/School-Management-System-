@@ -1,6 +1,7 @@
 package sehmus.school_management_system.payload.mappers;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import sehmus.school_management_system.models.concretes.User;
