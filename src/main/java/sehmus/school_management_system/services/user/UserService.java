@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import sehmus.school_management_system.exception.BadRequestException;
 import sehmus.school_management_system.exception.ResourceNotFoundException;
 import sehmus.school_management_system.models.concretes.User;
 import sehmus.school_management_system.models.enums.RoleType;
@@ -152,6 +153,51 @@ public class UserService {
 
 
     }
+
+    public String deleteUserById(Long id, HttpServletRequest request) {
+
+        User user = methodHelper.isUserExist(id);
+
+        String userName = (String) request.getAttribute("username");
+
+        User loggedInUser = userRepository.findByUsername(userName);
+
+        RoleType loggedInUserRole = loggedInUser.getUserRole().getRoleType();
+        RoleType deletedUserRole = user.getUserRole().getRoleType();
+
+
+        if (loggedInUser.getBuiltIn()) {
+
+            throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
+
+        } else if (loggedInUserRole == RoleType.MANAGER) {
+
+            if (!(deletedUserRole == RoleType.TEACHER ||
+                    deletedUserRole == RoleType.STUDENT ||
+                    deletedUserRole == RoleType.ASSISTANT_MANAGER)) {
+
+                throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
+
+            }} else if (loggedInUserRole == RoleType.ASSISTANT_MANAGER) {
+
+            if (!(deletedUserRole == RoleType.TEACHER ||
+                    deletedUserRole == RoleType.STUDENT)) {
+
+                throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
+
+            }
+        }
+        userRepository.deleteById(id);
+        return SuccessMessages.USER_DELETE;
+
+    }
+
+    public List<User> getAllUsers(){
+
+        return userRepository.findAll();
+
+    }
+
 
 
 }
