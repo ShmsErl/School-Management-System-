@@ -72,4 +72,14 @@ public class StudentService {
 
     }
 
+    private int getLastNumber(){
+
+        if (!userRepository.findStudent(RoleType.STUDENT)) return 1000;
+
+        return  userRepository.getMaxStudentNumber()+1;
+
+
+
+    }
+
 }
