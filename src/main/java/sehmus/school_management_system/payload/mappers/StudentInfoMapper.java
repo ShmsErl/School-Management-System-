@@ -4,9 +4,12 @@ package sehmus.school_management_system.payload.mappers;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import sehmus.school_management_system.models.concretes.EducationTerm;
+import sehmus.school_management_system.models.concretes.Lesson;
 import sehmus.school_management_system.models.concretes.StudentInfo;
 import sehmus.school_management_system.models.enums.Note;
 import sehmus.school_management_system.payload.requests.concretes.StudentInfoRequest;
+import sehmus.school_management_system.payload.requests.concretes.StudentInfoUpdateRequest;
 import sehmus.school_management_system.payload.responses.concretes.StudentInfoResponse;
 
 @Component
@@ -48,5 +51,28 @@ public class StudentInfoMapper {
                 .studentResponse(userMapper.mapUserToStudentResponse(studentInfo.getStudent()))
                 .build();
     }
+
+    public StudentInfo mapStudentInfoUpdateRequestToStudentInfo(StudentInfoUpdateRequest studentInfoUpdateRequest,
+                                                                Long studentInfoRequestId,
+                                                                Lesson lesson,
+                                                                EducationTerm educationTerm,
+                                                                Note note,
+                                                                Double average){
+
+        return StudentInfo.builder()
+                .id(studentInfoRequestId)
+                .infoNote(studentInfoUpdateRequest.getInfoNote())
+                .midtermExam(studentInfoUpdateRequest.getMidtermExam())
+                .finalExam(studentInfoUpdateRequest.getFinalExam())
+                .absentee(studentInfoUpdateRequest.getAbsentee())
+                .lesson(lesson)
+                .educationTerm(educationTerm)
+                .examAverage(average)
+                .letterGrade(note)
+                .build();
+
+
+    }
+
 
 }
