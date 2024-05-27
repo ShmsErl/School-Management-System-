@@ -5,6 +5,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import sehmus.school_management_system.models.concretes.User;
 import sehmus.school_management_system.payload.requests.abstracts.BaseUserRequest;
+import sehmus.school_management_system.payload.responses.concretes.StudentResponse;
 import sehmus.school_management_system.payload.responses.concretes.UserResponse;
 
 @Component
@@ -49,4 +50,25 @@ public class UserMapper {
                 .build();
 
     }
+
+    public StudentResponse mapUserToStudentResponse(User user){
+
+        return StudentResponse.builder()
+                .userId(user.getId())
+                .username(user.getUsername())
+                .name(user.getName())
+                .surname(user.getSurname())
+                .birthDay(user.getBirthDay())
+                .birthPlace(user.getBirthPlace())
+                .phoneNumber(user.getPhoneNumber())
+                .gender(user.getGender())
+                .email(user.getEmail())
+                .fatherName(user.getFatherName())
+                .motherName(user.getMotherName())
+                .studentNumber(user.getStudentNumber())
+                .isActive(user.isActive())
+                .build();
+
+    }
+
 }
