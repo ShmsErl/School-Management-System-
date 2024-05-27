@@ -1,5 +1,6 @@
 package sehmus.school_management_system.services.user;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -8,9 +9,14 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import sehmus.school_management_system.exception.BadRequestException;
+import sehmus.school_management_system.models.concretes.User;
 import sehmus.school_management_system.payload.mappers.UserMapper;
+import sehmus.school_management_system.payload.messages.ErrorMessages;
 import sehmus.school_management_system.payload.requests.authentication.LoginRequest;
+import sehmus.school_management_system.payload.requests.authentication.UpdatePasswordRequest;
 import sehmus.school_management_system.payload.responses.authentication.AuthResponse;
+import sehmus.school_management_system.payload.responses.concretes.UserResponse;
 import sehmus.school_management_system.repositories.UserRepository;
 import sehmus.school_management_system.security.jwt.JwtUtils;
 import sehmus.school_management_system.security.service.UserDetailsImpl;
@@ -65,6 +71,37 @@ public class AuthenticationService {
 
         return responseBuilder.build();
 
+
+    }
+
+    public void updatePassword(UpdatePasswordRequest updatePasswordRequest, HttpServletRequest httpServletRequest) {
+
+        String username = (String) httpServletRequest.getAttribute("username");
+        User user = userRepository.findByUsername(username);
+
+        if (user.getBuiltIn()){
+            throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
+        }
+
+        if (passwordEncoder.matches(updatePasswordRequest.getNewPassword(), user.getPassword())){
+
+            throw new BadRequestException(ErrorMessages.PASSWORD_SHOULD_NOT_MATCHED);
+
+        }
+
+        user.setPassword(passwordEncoder.encode(updatePasswordRequest.getNewPassword()));
+
+        userRepository.save(user);
+
+    }
+
+    public UserResponse findByUsername(HttpServletRequest httpServletRequest){
+
+        String userName = (String) httpServletRequest.getAttribute("username");
+
+        User user = userRepository.findByUsername(userName);
+
+        return userMapper.mapUserToUserResponse(user);
 
     }
 
