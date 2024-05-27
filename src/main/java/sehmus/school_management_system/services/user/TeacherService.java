@@ -22,6 +22,7 @@ import sehmus.school_management_system.services.validator.UniquePropertyValidato
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -98,6 +99,41 @@ public class TeacherService {
                 .returnBody(userMapper.mapUserToUserResponse(teacher))
                 .httpStatus(HttpStatus.OK)
                 .build();
+
+    }
+
+    public List<UserResponse> getAllAdvisorTeacher() {
+
+        return userRepository.findAllAdvisorTeacher()
+                .stream()
+                .map(userMapper::mapUserToUserResponse)
+                .collect(Collectors.toList());
+
+    }
+
+    public ResponseMessage<UserResponse> updateTeacher(TeacherRequest teacherRequest, Long userId) {
+
+        User teacher = methodHelper.isUserExist(userId);
+        methodHelper.checkRole(teacher, RoleType.TEACHER);
+
+        // TODO: after update IsAdvisorTeacher become false. How to fix it.
+
+        Set<LessonProgram> lessonProgramSet =
+                lessonProgramService.getLessonProgramById(teacherRequest.getLessonProgramIdList());
+
+        User teacherToSave = userMapper.mapUserRequestToUser(teacherRequest);
+        teacherToSave.setId(teacher.getId());
+        teacherToSave.setLessonProgramList(lessonProgramSet);
+        teacherToSave.setUserRole(userRoleService.getUserRole(RoleType.TEACHER));
+
+        User savedTeacher = userRepository.save(teacherToSave);
+
+        return ResponseMessage.<UserResponse>builder()
+                .message(SuccessMessages.TEACHER_UPDATE)
+                .returnBody(userMapper.mapUserToUserResponse(savedTeacher))
+                .httpStatus(HttpStatus.OK)
+                .build();
+
 
     }
 
