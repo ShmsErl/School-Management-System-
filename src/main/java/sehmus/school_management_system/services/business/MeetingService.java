@@ -158,4 +158,17 @@ public class MeetingService {
 
     }
 
+    public Page<MeetingResponse> getAllByPageTeacher(HttpServletRequest httpServletRequest, int page, int size) {
+
+        String username = (String) httpServletRequest.getAttribute("username");
+        User teacher = methodHelper.loadUserByName(username);
+        methodHelper.checkIsAdvisor(teacher);
+
+        Pageable pageable = pageableHelper.getPageableWithProperties(page, size);
+
+        return meetingRepository.findByAdvisoryTeacher_IdEquals(teacher.getId(), pageable)
+                .map(meetingMapper::mapMeetToMeetingResponse);
+
+    }
+
 }
