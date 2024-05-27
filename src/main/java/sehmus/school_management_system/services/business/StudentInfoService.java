@@ -17,6 +17,7 @@ import sehmus.school_management_system.payload.mappers.StudentInfoMapper;
 import sehmus.school_management_system.payload.messages.ErrorMessages;
 import sehmus.school_management_system.payload.messages.SuccessMessages;
 import sehmus.school_management_system.payload.requests.concretes.StudentInfoRequest;
+import sehmus.school_management_system.payload.requests.concretes.StudentInfoUpdateRequest;
 import sehmus.school_management_system.payload.responses.concretes.ResponseMessage;
 import sehmus.school_management_system.payload.responses.concretes.StudentInfoResponse;
 import sehmus.school_management_system.repositories.StudentInfoRepository;
@@ -132,5 +133,35 @@ public class StudentInfoService {
         } else throw new ResourceNotFoundException(String.format(ErrorMessages.STUDENT_INFO_NOT_FOUND, id));
 
     }
+
+    public ResponseMessage<StudentInfoResponse> updateStudentInfo(StudentInfoUpdateRequest studentInfoUpdateRequest, Long studentInfoId) {
+
+        Lesson lesson = lessonService.isLessonExistById(studentInfoUpdateRequest.getLessonId());
+
+        StudentInfo studentInfo = isStudentInfoExists(studentInfoId);
+
+        EducationTerm educationTerm = educationTermService.isEducationTermExists(studentInfoUpdateRequest.getEducationTermId());
+
+        Double noteAverage = calculateExamAverage(studentInfoUpdateRequest.getMidtermExam(), studentInfoUpdateRequest.getFinalExam());
+
+        Note note = checkLetterGrade(noteAverage);
+
+        StudentInfo studentInfoToUpdate = studentInfoMapper.mapStudentInfoUpdateRequestToStudentInfo(
+                studentInfoUpdateRequest, studentInfoId, lesson,educationTerm, note, noteAverage
+        );
+
+        studentInfoToUpdate.setStudent(studentInfo.getStudent());
+        studentInfoToUpdate.setTeacher(studentInfo.getTeacher());
+
+        StudentInfo updatedStudentInfo = studentInfoRepository.save(studentInfoToUpdate);
+
+        return ResponseMessage.<StudentInfoResponse>builder()
+                .message(SuccessMessages.STUDENT_INFO_UPDATE)
+                .httpStatus(HttpStatus.OK)
+                .returnBody(studentInfoMapper.mapStudentInfoToStudentInfoResponse(updatedStudentInfo))
+                .build();
+
+    }
+
 
 }
