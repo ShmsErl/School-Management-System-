@@ -207,6 +207,19 @@ public class StudentInfoService {
 
     }
 
+    public Page<StudentInfoResponse> getAllByTeacher(int page, int size, HttpServletRequest httpServletRequest) {
+
+        Pageable pageable = pageableHelper.getPageableWithProperties(page,size);
+
+        String username = (String) httpServletRequest.getAttribute("username");
+        User teacher = methodHelper.loadUserByName(username);
+
+        return studentInfoRepository.findByTeacherUsername(username, pageable)
+                .map(studentInfoMapper::mapStudentInfoToStudentInfoResponse);
+
+
+    }
+
 
 
 }
