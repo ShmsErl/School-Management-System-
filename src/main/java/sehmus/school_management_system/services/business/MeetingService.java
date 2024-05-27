@@ -30,8 +30,6 @@ public class MeetingService {
 
     private final MeetRepository meetingRepository;
 
-    //private final UserService userService;
-
     private final MethodHelper methodHelper;
 
     private final DateTimeValidator dateTimeValidator;
