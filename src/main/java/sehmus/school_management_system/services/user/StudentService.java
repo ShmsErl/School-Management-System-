@@ -1,14 +1,17 @@
 package sehmus.school_management_system.services.user;
 
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import sehmus.school_management_system.models.concretes.LessonProgram;
 import sehmus.school_management_system.models.concretes.User;
 import sehmus.school_management_system.models.enums.RoleType;
 import sehmus.school_management_system.payload.mappers.UserMapper;
 import sehmus.school_management_system.payload.messages.SuccessMessages;
+import sehmus.school_management_system.payload.requests.concretes.ChooseLessonProgramRequest;
 import sehmus.school_management_system.payload.requests.concretes.StudentRequest;
 import sehmus.school_management_system.payload.responses.concretes.ResponseMessage;
 import sehmus.school_management_system.payload.responses.concretes.StudentResponse;
@@ -17,6 +20,8 @@ import sehmus.school_management_system.services.business.LessonProgramService;
 import sehmus.school_management_system.services.helper.MethodHelper;
 import sehmus.school_management_system.services.validator.DateTimeValidator;
 import sehmus.school_management_system.services.validator.UniquePropertyValidator;
+
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -81,5 +86,32 @@ public class StudentService {
 
 
     }
+
+    public ResponseMessage<StudentResponse> addLessonProgram(HttpServletRequest httpServletRequest,
+                                                             ChooseLessonProgramRequest request) {
+
+        String username = (String) httpServletRequest.getAttribute("username");
+        User loggedInStudent = methodHelper.loadUserByName(username);
+
+        Set<LessonProgram> lessonPrograms = lessonProgramService.getLessonProgramById(request.getLessonProgramId());
+
+        Set<LessonProgram> existingLessonPrograms = loggedInStudent.getLessonProgramList();
+
+        dateTimeValidator.checkLessonPrograms(existingLessonPrograms, lessonPrograms);
+
+        existingLessonPrograms.addAll(lessonPrograms);
+        loggedInStudent.setLessonProgramList(existingLessonPrograms);
+
+        User savedStudent = userRepository.save(loggedInStudent);
+
+        return ResponseMessage.<StudentResponse>builder()
+                .message(SuccessMessages.LESSON_PROGRAM_ADD_TO_STUDENT)
+                .httpStatus(HttpStatus.OK)
+                .returnBody(userMapper.mapUserToStudentResponse(savedStudent))
+                .build();
+
+    }
+
+
 
 }
