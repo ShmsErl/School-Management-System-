@@ -130,5 +130,28 @@ public class UserService {
 
     }
 
+    public ResponseMessage<BaseUserResponse> updateAdminDeanViceDeanByAdmin(
+            Long userId, UserRequest userRequest) {
+
+        User user = methodHelper.isUserExist(userId);
+
+        methodHelper.checkBuiltIn(user);
+
+        uniquePropertyValidator.checkUniqueProperties(user, userRequest);
+
+        User userToSave = userMapper.mapUserRequestToUser(userRequest);
+        userToSave.setId(user.getId());
+        userToSave.setUserRole(user.getUserRole());
+        User savedUser = userRepository.save(userToSave);
+
+        return ResponseMessage.<BaseUserResponse>builder()
+                .message(SuccessMessages.USER_UPDATE_MESSAGE)
+                .httpStatus(HttpStatus.OK)
+                .returnBody(userMapper.mapUserToUserResponse(savedUser))
+                .build();
+
+
+    }
+
 
 }
