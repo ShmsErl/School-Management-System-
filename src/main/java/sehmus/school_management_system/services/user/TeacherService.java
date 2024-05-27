@@ -1,6 +1,7 @@
 package sehmus.school_management_system.services.user;
 
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -11,8 +12,10 @@ import sehmus.school_management_system.models.concretes.User;
 import sehmus.school_management_system.models.enums.RoleType;
 import sehmus.school_management_system.payload.mappers.UserMapper;
 import sehmus.school_management_system.payload.messages.SuccessMessages;
+import sehmus.school_management_system.payload.requests.concretes.AddLessonProgramToTeacherRequest;
 import sehmus.school_management_system.payload.requests.concretes.TeacherRequest;
 import sehmus.school_management_system.payload.responses.concretes.ResponseMessage;
+import sehmus.school_management_system.payload.responses.concretes.StudentResponse;
 import sehmus.school_management_system.payload.responses.concretes.UserResponse;
 import sehmus.school_management_system.repositories.UserRepository;
 import sehmus.school_management_system.services.business.LessonProgramService;
@@ -132,6 +135,41 @@ public class TeacherService {
                 .message(SuccessMessages.TEACHER_UPDATE)
                 .returnBody(userMapper.mapUserToUserResponse(savedTeacher))
                 .httpStatus(HttpStatus.OK)
+                .build();
+
+
+    }
+
+    public List<StudentResponse> getAllStudentByAdvisorTeacher(HttpServletRequest httpServletRequest) {
+
+        String username = (String) httpServletRequest.getAttribute("username");
+        User teacher = methodHelper.loadUserByName(username);
+        methodHelper.checkIsAdvisor(teacher);
+        return userRepository.findByAdvisorTeacherId(teacher.getId())
+                .stream()
+                .map(userMapper::mapUserToStudentResponse)
+                .collect(Collectors.toList());
+
+    }
+
+    public ResponseMessage<UserResponse> addLessonProgramToTeacher(AddLessonProgramToTeacherRequest addLessonProgramToTeacherRequest) {
+
+        User teacher = methodHelper.isUserExist(addLessonProgramToTeacherRequest.getTeacherId());
+        methodHelper.checkRole(teacher, RoleType.TEACHER);
+        Set<LessonProgram> existingLessonPrograms = teacher.getLessonProgramList();
+
+        Set<LessonProgram> requestedLessonPrograms =
+                lessonProgramService.getLessonProgramById(addLessonProgramToTeacherRequest.getLessonProgramId());
+
+        dateTimeValidator.checkLessonPrograms(existingLessonPrograms, requestedLessonPrograms);
+        existingLessonPrograms.addAll(requestedLessonPrograms);
+        teacher.setLessonProgramList(existingLessonPrograms);
+        User updatedTeacher = userRepository.save(teacher);
+
+        return ResponseMessage.<UserResponse>builder()
+                .message(SuccessMessages.LESSON_PROGRAM_ADD_TO_TEACHER)
+                .httpStatus(HttpStatus.OK)
+                .returnBody(userMapper.mapUserToUserResponse(updatedTeacher))
                 .build();
 
 
