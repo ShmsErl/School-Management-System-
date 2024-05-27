@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import sehmus.school_management_system.exception.ConflictException;
 import sehmus.school_management_system.models.concretes.EducationTerm;
 import sehmus.school_management_system.models.concretes.Lesson;
 import sehmus.school_management_system.models.concretes.StudentInfo;
@@ -12,6 +13,7 @@ import sehmus.school_management_system.models.concretes.User;
 import sehmus.school_management_system.models.enums.Note;
 import sehmus.school_management_system.models.enums.RoleType;
 import sehmus.school_management_system.payload.mappers.StudentInfoMapper;
+import sehmus.school_management_system.payload.messages.ErrorMessages;
 import sehmus.school_management_system.payload.messages.SuccessMessages;
 import sehmus.school_management_system.payload.requests.concretes.StudentInfoRequest;
 import sehmus.school_management_system.payload.responses.concretes.ResponseMessage;
@@ -75,6 +77,44 @@ public class StudentInfoService {
                 .httpStatus(HttpStatus.OK)
                 .build();
 
+    }
+
+
+    private void validateLessonDuplication(Long studentId, String lessonName){
+
+        if (studentInfoRepository.giveMeDuplications(studentId,lessonName)){
+
+            throw new ConflictException(String.format(ErrorMessages.ALREADY_REGISTER_LESSON_MESSAGE, lessonName));
+
+        }
+
+
+
+    }
+
+    private Double calculateExamAverage(Double midTermExam, Double finalExam){
+
+        return (midTermExam*midTermExamPercentage) + (finalExam*finalExamPercentage);
+
+    }
+
+    private Note checkLetterGrade(Double average){
+
+        if(average<50.0) {
+            return Note.FF;
+        } else if (average<60) {
+            return Note.DD;
+        } else if (average<65) {
+            return Note.CC;
+        } else if (average<70) {
+            return  Note.CB;
+        } else if (average<75) {
+            return  Note.BB;
+        } else if (average<80) {
+            return Note.BA;
+        } else {
+            return Note.AA;
+        }
     }
 
 }
