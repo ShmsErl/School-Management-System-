@@ -4,6 +4,7 @@ package sehmus.school_management_system.services.user;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import sehmus.school_management_system.models.concretes.LessonProgram;
@@ -13,6 +14,7 @@ import sehmus.school_management_system.payload.mappers.UserMapper;
 import sehmus.school_management_system.payload.messages.SuccessMessages;
 import sehmus.school_management_system.payload.requests.concretes.ChooseLessonProgramRequest;
 import sehmus.school_management_system.payload.requests.concretes.StudentRequest;
+import sehmus.school_management_system.payload.requests.concretes.StudentUpdateRequestWithoutPassword;
 import sehmus.school_management_system.payload.responses.concretes.ResponseMessage;
 import sehmus.school_management_system.payload.responses.concretes.StudentResponse;
 import sehmus.school_management_system.repositories.UserRepository;
@@ -109,6 +111,29 @@ public class StudentService {
                 .httpStatus(HttpStatus.OK)
                 .returnBody(userMapper.mapUserToStudentResponse(savedStudent))
                 .build();
+
+    }
+
+    public ResponseEntity<String> updateStudent(StudentUpdateRequestWithoutPassword studentUpdateRequestWithoutPassword,
+                                                HttpServletRequest httpServletRequest) {
+
+        String username = (String) httpServletRequest.getAttribute("username");
+        User student = methodHelper.loadUserByName(username);
+        uniquePropertyValidator.checkUniqueProperties(student, studentUpdateRequestWithoutPassword);
+
+        student.setMotherName(studentUpdateRequestWithoutPassword.getMotherName());
+        student.setFatherName(studentUpdateRequestWithoutPassword.getFatherName());
+        student.setBirthPlace(studentUpdateRequestWithoutPassword.getBirthPlace());
+        student.setBirthDay(studentUpdateRequestWithoutPassword.getBirthDay());
+        student.setEmail(studentUpdateRequestWithoutPassword.getEmail());
+        student.setPhoneNumber(studentUpdateRequestWithoutPassword.getPhoneNumber());
+        student.setGender(studentUpdateRequestWithoutPassword.getGender());
+        student.setName(studentUpdateRequestWithoutPassword.getName());
+        student.setSurname(studentUpdateRequestWithoutPassword.getSurname());
+        student.setSsn(studentUpdateRequestWithoutPassword.getSsn());
+        userRepository.save(student);
+
+        return ResponseEntity.ok(SuccessMessages.STUDENT_UPDATE);
 
     }
 
