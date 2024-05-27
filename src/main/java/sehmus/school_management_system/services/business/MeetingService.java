@@ -18,6 +18,7 @@ import sehmus.school_management_system.services.helper.PageableHelper;
 import sehmus.school_management_system.services.validator.DateTimeValidator;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -95,6 +96,13 @@ public class MeetingService {
                 .returnBody(meetingMapper.mapMeetToMeetingResponse(updatedMeet))
                 .build();
 
+    }
+
+    public List<MeetingResponse> getAll() {
+
+        return meetingRepository.findAll().stream()
+                .map(meetingMapper::mapMeetToMeetingResponse)
+                .collect(Collectors.toList());
     }
 
 }
