@@ -1,5 +1,6 @@
 package sehmus.school_management_system.services.user;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,6 +13,7 @@ import sehmus.school_management_system.payload.mappers.UserMapper;
 import sehmus.school_management_system.payload.messages.ErrorMessages;
 import sehmus.school_management_system.payload.messages.SuccessMessages;
 import sehmus.school_management_system.payload.requests.concretes.UserRequest;
+import sehmus.school_management_system.payload.requests.concretes.UserRequestWithoutPassword;
 import sehmus.school_management_system.payload.responses.abstracts.BaseUserResponse;
 import sehmus.school_management_system.payload.responses.concretes.ResponseMessage;
 import sehmus.school_management_system.payload.responses.concretes.UserResponse;
@@ -99,6 +101,32 @@ public class UserService {
 
         return userRepository.findUserByNameContainingIgnoreCase(userName).stream()
                 .map(userMapper::mapUserToUserResponse).collect(Collectors.toList());
+
+    }
+
+    public String updateUser(UserRequestWithoutPassword userRequest, HttpServletRequest request) {
+
+        String userName = (String) request.getAttribute("username");
+
+        User user = userRepository.findByUsername(userName);
+
+        methodHelper.checkBuiltIn(user);
+
+        uniquePropertyValidator.checkUniqueProperties(user, userRequest);
+
+        user.setName(userRequest.getName());
+        user.setSurname(userRequest.getSurname());
+        user.setUsername(userRequest.getUsername());
+        user.setBirthDay(userRequest.getBirthDay());
+        user.setBirthPlace(userRequest.getBirthPlace());
+        user.setEmail(userRequest.getEmail());
+        user.setPhoneNumber(userRequest.getPhoneNumber());
+        user.setGender(userRequest.getGender());
+        user.setSsn(userRequest.getSsn());
+
+        userRepository.save(user);
+        return SuccessMessages.USER_UPDATE;
+
 
     }
 
