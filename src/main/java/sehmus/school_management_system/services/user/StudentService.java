@@ -138,5 +138,35 @@ public class StudentService {
     }
 
 
+    public ResponseMessage<StudentResponse> updateStudentForManagers(Long id, StudentRequest studentRequest) {
+
+        User student = methodHelper.isUserExist(id);
+        methodHelper.checkRole(student, RoleType.STUDENT );
+        uniquePropertyValidator.checkUniqueProperties(student, studentRequest);
+
+        User studentForUpdate = userMapper.mapUserRequestToUser(studentRequest);
+        studentForUpdate.setMotherName(studentRequest.getMotherName());
+        studentForUpdate.setFatherName(studentRequest.getFatherName());
+
+        User advisorTeacher = methodHelper.isUserExist(studentRequest.getAdvisorTeacherId());
+        methodHelper.checkRole(advisorTeacher, RoleType.TEACHER);
+        methodHelper.checkIsAdvisor(advisorTeacher);
+
+        studentForUpdate.setUserRole(userRoleService.getUserRole(RoleType.STUDENT));
+        studentForUpdate.setActive(true);
+        studentForUpdate.setStudentNumber(student.getStudentNumber());
+        studentForUpdate.setId(student.getId());
+
+        return ResponseMessage.<StudentResponse>builder()
+                .message(SuccessMessages.STUDENT_UPDATE)
+                .returnBody(userMapper.mapUserToStudentResponse(userRepository.save(studentForUpdate)))
+                .httpStatus(HttpStatus.OK)
+                .build();
+
+
+    }
+
+
+
 
 }
