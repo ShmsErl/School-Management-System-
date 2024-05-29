@@ -14,6 +14,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import sehmus.school_management_system.security.jwt.AuthEntryPointJwt;
 import sehmus.school_management_system.security.jwt.AuthTokenFilter;
 import sehmus.school_management_system.security.service.UserDetailServiceImpl;
@@ -56,6 +58,26 @@ public class WebSecurityConfig {
         daoAuthenticationProvider.setUserDetailsService(userDetailService);
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
         return daoAuthenticationProvider;
+
+    }
+
+
+    @Bean
+    public WebMvcConfigurer corsConfigurer(){
+
+        return new WebMvcConfigurer(){
+
+            @Override
+            public void addCorsMappings (CorsRegistry corsRegistry) {
+
+                corsRegistry.addMapping("/**")
+                        .allowedOrigins("*")
+                        .allowedHeaders("*")
+                        .allowedMethods("*");
+
+            }
+
+        };
 
     }
 
