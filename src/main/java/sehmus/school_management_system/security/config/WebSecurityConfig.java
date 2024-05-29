@@ -4,12 +4,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import sehmus.school_management_system.security.jwt.AuthEntryPointJwt;
 import sehmus.school_management_system.security.jwt.AuthTokenFilter;
+import sehmus.school_management_system.security.service.UserDetailServiceImpl;
 
 @EnableWebSecurity
 @Configuration
@@ -17,7 +20,9 @@ import sehmus.school_management_system.security.jwt.AuthTokenFilter;
 @RequiredArgsConstructor
 public class WebSecurityConfig {
 
+    private final UserDetailServiceImpl userDetailService;
 
+    private final AuthEntryPointJwt authEntryPointJwt;
 
 
     @Bean
@@ -35,6 +40,16 @@ public class WebSecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public DaoAuthenticationProvider daoAuthenticationProvider(){
+
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+        daoAuthenticationProvider.setUserDetailsService(userDetailService);
+        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+        return daoAuthenticationProvider;
+
     }
 
 }
