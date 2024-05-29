@@ -31,7 +31,22 @@ public class WebSecurityConfig {
     private final AuthEntryPointJwt authEntryPointJwt;
 
 
+  /*  @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.cors().and()
+                .csrf().disable()
+                .exceptionHandling().authenticationEntryPoint(authEntryPointJwt).and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+                .authorizeHttpRequests()
+                .requestMatchers(AUTH_WHITE_LIST).permitAll()  // Updated to requestMatchers
+                .anyRequest().authenticated().and()
+                .headers().frameOptions().sameOrigin().and()
+                .authenticationProvider(daoAuthenticationProvider())
+                .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
+        return http.build();
+    }
+*/
 
 
     @Bean
