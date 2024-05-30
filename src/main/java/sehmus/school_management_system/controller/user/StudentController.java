@@ -37,4 +37,14 @@ public class StudentController {
 
     }
 
+    @PreAuthorize("hasAnyAuthority('Admin', 'Dean', 'ViceDean')")
+    @PutMapping("/updateStudentForManagers/{id}")
+    public ResponseMessage<StudentResponse> updateStudentForManagers(@PathVariable Long id,
+                                                                     @RequestBody @Valid StudentRequest studentRequest){
+
+
+        return studentService.updateStudentForManagers(id, studentRequest);
+
+    }
+
 }
