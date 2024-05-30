@@ -51,4 +51,13 @@ public class TeacherController {
 
     }
 
+    @PreAuthorize("hasAnyAuthority('Admin','Dean','ViceDean')")
+    @PutMapping("/updateTeacher/{userId}")
+    public ResponseMessage<UserResponse> updateTeacherByManagers(@Valid @RequestBody TeacherRequest teacherRequest,
+                                                                 @PathVariable Long userId){
+
+        return teacherService.updateTeacher(teacherRequest, userId);
+
+    }
+
 }
