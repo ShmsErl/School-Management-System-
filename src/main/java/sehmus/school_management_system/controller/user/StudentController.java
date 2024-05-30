@@ -57,4 +57,14 @@ public class StudentController {
 
     }
 
+    @PreAuthorize("hasAnyAuthority('Admin', 'Dean', 'ViceDean')")
+    @GetMapping("/changeStatus")
+    public ResponseMessage changeStatus(@RequestParam Long id,
+                                        @RequestParam boolean status){
+
+        return studentService.changeStatus(id, status);
+
+    }
+
+
 }
