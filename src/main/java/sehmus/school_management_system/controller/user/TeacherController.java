@@ -10,6 +10,8 @@ import sehmus.school_management_system.payload.responses.concretes.ResponseMessa
 import sehmus.school_management_system.payload.responses.concretes.UserResponse;
 import sehmus.school_management_system.services.user.TeacherService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/teacher")
 @RequiredArgsConstructor
@@ -29,6 +31,14 @@ public class TeacherController {
     public ResponseMessage<UserResponse> deleteTeacherById(@PathVariable Long id){
 
         return teacherService.changeAdvisorTeacherStatus(id);
+
+    }
+
+    @PreAuthorize("hasAnyAuthority('Admin','Dean','ViceDean')")
+    @GetMapping("/getAllAdvisorTeacher")
+    public List<UserResponse> getAllAdvisorTeacher(){
+
+        return teacherService.getAllAdvisorTeacher();
 
     }
 
