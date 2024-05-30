@@ -1,5 +1,6 @@
 package sehmus.school_management_system.controller.user;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -8,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import sehmus.school_management_system.payload.requests.concretes.UserRequest;
+import sehmus.school_management_system.payload.requests.concretes.UserRequestWithoutPassword;
 import sehmus.school_management_system.payload.responses.abstracts.BaseUserResponse;
 import sehmus.school_management_system.payload.responses.concretes.ResponseMessage;
 import sehmus.school_management_system.payload.responses.concretes.UserResponse;
@@ -60,6 +62,16 @@ public class UserController {
     public List<UserResponse> getUserByName(@RequestParam(name = "name") String userName){
 
         return userService.getUserByName(userName);
+
+    }
+
+    @PreAuthorize(("hasAnyAuthority('Admin, Dean, ViceDean, Teacher')"))
+    @PatchMapping("/updateUser")
+    public ResponseEntity<String> updateUser(
+            @RequestBody @Valid UserRequestWithoutPassword userRequestWithoutPassword,
+            HttpServletRequest request){
+
+        return ResponseEntity.ok(userService.updateUser(userRequestWithoutPassword, request));
 
     }
 
