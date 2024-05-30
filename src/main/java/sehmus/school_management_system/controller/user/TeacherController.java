@@ -1,5 +1,6 @@
 package sehmus.school_management_system.controller.user;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -59,5 +60,14 @@ public class TeacherController {
         return teacherService.updateTeacher(teacherRequest, userId);
 
     }
+
+    @PreAuthorize("hasAnyAuthority('Teacher')")
+    @GetMapping("/getAllStudentByAdvisorTeacher")
+    public List<StudentResponse> getAllStudentByAdvisorTeacher(HttpServletRequest httpServletRequest){
+
+        return teacherService.getAllStudentByAdvisorTeacher(httpServletRequest);
+
+    }
+
 
 }
