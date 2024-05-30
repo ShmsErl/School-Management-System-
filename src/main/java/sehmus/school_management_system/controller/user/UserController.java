@@ -13,6 +13,8 @@ import sehmus.school_management_system.payload.responses.concretes.ResponseMessa
 import sehmus.school_management_system.payload.responses.concretes.UserResponse;
 import sehmus.school_management_system.services.user.UserService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/user")
 @RequiredArgsConstructor
@@ -50,6 +52,14 @@ public class UserController {
     public ResponseMessage<BaseUserResponse> getUserById(@PathVariable Long userId){
 
         return userService.getUserById(userId);
+
+    }
+
+    @PreAuthorize(("hasAnyAuthority('Admin, Dean, ViceDean')"))
+    @GetMapping("/getUserByName")
+    public List<UserResponse> getUserByName(@RequestParam(name = "name") String userName){
+
+        return userService.getUserByName(userName);
 
     }
 
