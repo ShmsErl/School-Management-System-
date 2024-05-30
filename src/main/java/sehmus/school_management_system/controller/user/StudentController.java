@@ -11,4 +11,5 @@ import sehmus.school_management_system.services.user.StudentService;
 public class StudentController {
     private final StudentService studentService;
 
+
 }
