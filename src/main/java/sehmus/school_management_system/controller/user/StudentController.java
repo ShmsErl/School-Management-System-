@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import sehmus.school_management_system.payload.requests.concretes.ChooseLessonProgramRequest;
 import sehmus.school_management_system.payload.requests.concretes.StudentRequest;
 import sehmus.school_management_system.payload.requests.concretes.StudentUpdateRequestWithoutPassword;
 import sehmus.school_management_system.payload.responses.concretes.ResponseMessage;
@@ -44,6 +45,15 @@ public class StudentController {
 
 
         return studentService.updateStudentForManagers(id, studentRequest);
+
+    }
+
+    @PreAuthorize("hasAnyAuthority('Student')")
+    @PostMapping("/addLessonProgram")
+    public ResponseMessage<StudentResponse> addLessonProgram(HttpServletRequest httpServletRequest,
+                                                             @Valid @RequestBody ChooseLessonProgramRequest request){
+
+        return studentService.addLessonProgram(httpServletRequest, request);
 
     }
 
