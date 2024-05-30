@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import sehmus.school_management_system.payload.requests.concretes.AddLessonProgramToTeacherRequest;
 import sehmus.school_management_system.payload.requests.concretes.TeacherRequest;
 import sehmus.school_management_system.payload.responses.concretes.ResponseMessage;
 import sehmus.school_management_system.payload.responses.concretes.UserResponse;
@@ -39,6 +40,14 @@ public class TeacherController {
     public List<UserResponse> getAllAdvisorTeacher(){
 
         return teacherService.getAllAdvisorTeacher();
+
+    }
+
+    @PreAuthorize("hasAnyAuthority('Admin','Dean','ViceDean')")
+    @PostMapping("/addLessonProgram")
+    public ResponseMessage<UserResponse> chooseLesson(@Valid @RequestBody AddLessonProgramToTeacherRequest addLessonProgramToTeacherRequest){
+
+        return teacherService.addLessonProgramToTeacher(addLessonProgramToTeacherRequest);
 
     }
 
