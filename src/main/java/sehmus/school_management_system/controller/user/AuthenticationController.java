@@ -10,6 +10,7 @@ import sehmus.school_management_system.payload.messages.SuccessMessages;
 import sehmus.school_management_system.payload.requests.authentication.LoginRequest;
 import sehmus.school_management_system.payload.requests.authentication.UpdatePasswordRequest;
 import sehmus.school_management_system.payload.responses.authentication.AuthResponse;
+import sehmus.school_management_system.payload.responses.concretes.UserResponse;
 import sehmus.school_management_system.services.user.AuthenticationService;
 
 @RestController
@@ -34,6 +35,14 @@ public class AuthenticationController {
         authenticationService.updatePassword(updatePasswordRequest, httpServletRequest);
 
         return ResponseEntity.ok(SuccessMessages.PASSWORD_CHANGED_RESPONSE_MESSAGE);
+
+    }
+
+    @PreAuthorize("hasAnyAuthority('Admin','Dean','ViceDean','Teacher','Student')")
+    @GetMapping("/user")
+    public ResponseEntity<UserResponse> findByUsername(HttpServletRequest httpServletRequest){
+
+        return ResponseEntity.ok(authenticationService.findByUsername(httpServletRequest));
 
     }
 }
