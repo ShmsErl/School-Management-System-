@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import sehmus.school_management_system.payload.requests.concretes.UserRequest;
+import sehmus.school_management_system.payload.responses.abstracts.BaseUserResponse;
 import sehmus.school_management_system.payload.responses.concretes.ResponseMessage;
 import sehmus.school_management_system.payload.responses.concretes.UserResponse;
 import sehmus.school_management_system.services.user.UserService;
@@ -41,6 +42,14 @@ public class UserController {
 
         Page<UserResponse> userResponse = userService.getUsersByPage(page,size,sort,type,userRole);
         return new ResponseEntity<>(userResponse, HttpStatus.OK);
+
+    }
+
+    @PreAuthorize(("hasAnyAuthority('Admin, Dean')"))
+    @GetMapping("/getUserById/{userId}")
+    public ResponseMessage<BaseUserResponse> getUserById(@PathVariable Long userId){
+
+        return userService.getUserById(userId);
 
     }
 
