@@ -4,11 +4,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import sehmus.school_management_system.payload.requests.concretes.StudentInfoRequest;
+import sehmus.school_management_system.payload.requests.concretes.StudentInfoUpdateRequest;
 import sehmus.school_management_system.payload.responses.concretes.ResponseMessage;
 import sehmus.school_management_system.payload.responses.concretes.StudentInfoResponse;
 import sehmus.school_management_system.services.business.StudentInfoService;
@@ -30,5 +28,15 @@ public class StudentInfoController {
         return studentInfoService.saveStudentInfo(httpServletRequest, studentInfoRequest);
 
     }
+    @PreAuthorize("hasAnyAuthority('Admin', 'Teacher')")
+    @PutMapping("/update/{studentInfoId}")
+    public ResponseMessage<StudentInfoResponse> updateStudentInfo(@Valid @RequestBody StudentInfoUpdateRequest studentInfoUpdateRequest,
+                                                                  @PathVariable Long studentInfoId){
+
+        return studentInfoService.updateStudentInfo(studentInfoUpdateRequest, studentInfoId);
+
+    }
+
+
 
 }
