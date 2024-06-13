@@ -45,4 +45,10 @@ public class MeetingController {
         return meetingService.getAll();
 
     }
+
+    @PreAuthorize("hasAnyAuthority('Admin')")
+    @DeleteMapping("/delete/{id}")
+    public ResponseMessage deleteById(@PathVariable Long id){
+        return meetingService.deleteById(id);
+    }
 }
