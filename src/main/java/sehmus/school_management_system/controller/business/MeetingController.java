@@ -3,6 +3,7 @@ package sehmus.school_management_system.controller.business;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -66,6 +67,26 @@ public class MeetingController {
     public ResponseEntity<List<MeetingResponse>> getAllMeetingsByLoggedInStudent(HttpServletRequest httpServletRequest){
 
         return ResponseEntity.ok(meetingService.getAllMeetingsByLoggedInStudent(httpServletRequest));
+
+    }
+
+    @PreAuthorize("hasAnyAuthority('Admin')")
+    @GetMapping("/getAllByPage")
+    public Page<MeetingResponse> getAllByPage(@RequestParam(value = "page") int page,
+                                              @RequestParam(value = "size") int size){
+
+        return meetingService.getAllByPage(page, size);
+
+    }
+
+
+    @PreAuthorize("hasAnyAuthority('Teacher')")
+    @GetMapping("/getAllByPageTeacher")
+    public Page<MeetingResponse> getAllByPageTeacher(HttpServletRequest httpServletRequest,
+                                                     @RequestParam(value = "page") int page,
+                                                     @RequestParam(value = "size") int size){
+
+        return meetingService.getAllByPageTeacher(httpServletRequest, page, size);
 
     }
 }
