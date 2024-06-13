@@ -13,6 +13,8 @@ import sehmus.school_management_system.payload.responses.concretes.ResponseMessa
 import sehmus.school_management_system.payload.responses.concretes.StudentInfoResponse;
 import sehmus.school_management_system.services.business.StudentInfoService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/studentInfo")
 @RequiredArgsConstructor
@@ -67,6 +69,15 @@ public class StudentInfoController {
         return ResponseEntity.ok(studentInfoService.findStudentInfoById(id));
 
     }
+
+    @PreAuthorize("hasAnyAuthority('Admin', 'Teacher')")
+    @GetMapping("/getByStudentId/{studentId}")
+    public ResponseEntity<List<StudentInfoResponse>> getStudentInfoByStudentId (@PathVariable Long studentId){
+
+        return ResponseEntity.ok(studentInfoService.findStudentInfoByStudentId(studentId));
+
+    }
+
 
 
 
