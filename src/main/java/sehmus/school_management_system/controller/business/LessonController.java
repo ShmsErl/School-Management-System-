@@ -6,10 +6,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import sehmus.school_management_system.models.concretes.Lesson;
 import sehmus.school_management_system.payload.requests.concretes.LessonRequest;
 import sehmus.school_management_system.payload.responses.concretes.LessonResponse;
 import sehmus.school_management_system.payload.responses.concretes.ResponseMessage;
 import sehmus.school_management_system.services.business.LessonService;
+
+import java.util.Set;
 
 @RestController
 @RequestMapping("/lesson")
@@ -56,4 +59,13 @@ public class LessonController {
         return lessonService.findLessonByPage(page, size, sort, type);
 
     }
+
+    @PreAuthorize("hasAnyAuthority('Admin','Dean','ViceDean')")
+    @GetMapping("/idSet")
+    public Set<Lesson> getAllLessonByIdSet(@RequestParam(name = "lessonId") Set<Long> idSet){
+
+        return lessonService.getLessonByIdSet(idSet);
+
+    }
+
 }
