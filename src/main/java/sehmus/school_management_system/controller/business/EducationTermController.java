@@ -57,4 +57,13 @@ public class EducationTermController {
         return educationTermService.getAllByPage(page,size,sort,type);
 
     }
+
+    @PreAuthorize("hasAnyAuthority('Admin','Dean', 'ViceDean', 'Teacher')")
+    @DeleteMapping("/delete/{id}")
+    public ResponseMessage deleteEducationTermById(@PathVariable Long id){
+
+        return educationTermService.deleteById(id);
+
+    }
+
 }
