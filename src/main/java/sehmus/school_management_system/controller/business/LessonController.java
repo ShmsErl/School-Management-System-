@@ -4,10 +4,7 @@ package sehmus.school_management_system.controller.business;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import sehmus.school_management_system.payload.requests.concretes.LessonRequest;
 import sehmus.school_management_system.payload.responses.concretes.LessonResponse;
 import sehmus.school_management_system.payload.responses.concretes.ResponseMessage;
@@ -26,6 +23,14 @@ public class LessonController {
     public ResponseMessage<LessonResponse> saveLesson(@Valid @RequestBody LessonRequest lessonRequest){
 
         return lessonService.saveLesson(lessonRequest);
+
+    }
+
+    @PreAuthorize("hasAnyAuthority('Admin','Dean','ViceDean')")
+    @DeleteMapping("/delete/{id}")
+    public ResponseMessage deleteLesson(@PathVariable Long id){
+
+        return lessonService.deleteById(id);
 
     }
 }
