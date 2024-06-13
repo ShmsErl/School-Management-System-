@@ -51,4 +51,12 @@ public class LessonProgramController {
         return lessonProgramService.getAllAssigned();
 
     }
+
+    @PreAuthorize("hasAnyAuthority('Admin','Dean','ViceDean')")
+    @GetMapping("/getById/{id}")
+    public LessonProgramResponse getById(@PathVariable Long id){
+
+        return lessonProgramService.getLessonProgramById(id);
+
+    }
 }
