@@ -4,6 +4,7 @@ package sehmus.school_management_system.controller.business;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import sehmus.school_management_system.models.concretes.Lesson;
@@ -65,6 +66,15 @@ public class LessonController {
     public Set<Lesson> getAllLessonByIdSet(@RequestParam(name = "lessonId") Set<Long> idSet){
 
         return lessonService.getLessonByIdSet(idSet);
+
+    }
+
+    @PreAuthorize("hasAnyAuthority('Admin','Dean','ViceDean')")
+    @PutMapping("/update/{lessonId}")
+    public ResponseEntity<LessonResponse> updateLessonById(@PathVariable Long lessonId,
+                                                           @RequestBody LessonRequest lessonRequest){
+
+        return ResponseEntity.ok(lessonService.updateLessonById(lessonId, lessonRequest));
 
     }
 
