@@ -3,6 +3,7 @@ package sehmus.school_management_system.controller.business;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import sehmus.school_management_system.payload.requests.concretes.MeetingRequest;
@@ -50,5 +51,21 @@ public class MeetingController {
     @DeleteMapping("/delete/{id}")
     public ResponseMessage deleteById(@PathVariable Long id){
         return meetingService.deleteById(id);
+    }
+
+    @PreAuthorize("hasAnyAuthority('Teacher')")
+    @GetMapping("/getAllByTeacher")
+    public ResponseEntity<List<MeetingResponse>> getAllMeetingsByLoggedInTeacher(HttpServletRequest httpServletRequest){
+
+        return ResponseEntity.ok(meetingService.getAllMeetingsByLoggedInTeacher(httpServletRequest));
+
+    }
+
+    @PreAuthorize("hasAnyAuthority('Student')")
+    @GetMapping("/getAllByStudent")
+    public ResponseEntity<List<MeetingResponse>> getAllMeetingsByLoggedInStudent(HttpServletRequest httpServletRequest){
+
+        return ResponseEntity.ok(meetingService.getAllMeetingsByLoggedInStudent(httpServletRequest));
+
     }
 }
