@@ -3,6 +3,7 @@ package sehmus.school_management_system.controller.business;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import sehmus.school_management_system.payload.requests.concretes.LessonRequest;
@@ -39,6 +40,20 @@ public class LessonController {
     public ResponseMessage<LessonResponse> getLessonByLessonName(@RequestParam String lessonName){
 
         return lessonService.getLessonByLessonName(lessonName);
+
+    }
+
+
+    @PreAuthorize("hasAnyAuthority('Admin','Dean','ViceDean')")
+    @GetMapping("/findByPage")
+    public Page<LessonResponse> getLessonByPage(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            @RequestParam(value = "sort", defaultValue = "lessonName") String sort,
+            @RequestParam(value = "type", defaultValue = "desc") String type
+    ){
+
+        return lessonService.findLessonByPage(page, size, sort, type);
 
     }
 }
