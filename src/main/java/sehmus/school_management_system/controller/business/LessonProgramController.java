@@ -34,4 +34,13 @@ public class LessonProgramController {
         return lessonProgramService.getAll();
 
     }
+
+
+    @PreAuthorize("hasAnyAuthority('Admin','Dean','ViceDean','Teacher','Student')")
+    @GetMapping("/getAllUnassigned")
+    public List<LessonProgramResponse> getAllUnassigned(){
+
+        return lessonProgramService.getAllUnassigned();
+
+    }
 }
