@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import sehmus.school_management_system.payload.requests.concretes.AddLessonProgramToTeacherRequest;
 import sehmus.school_management_system.payload.requests.concretes.TeacherRequest;
 import sehmus.school_management_system.payload.responses.concretes.ResponseMessage;
+import sehmus.school_management_system.payload.responses.concretes.StudentResponse;
 import sehmus.school_management_system.payload.responses.concretes.UserResponse;
 import sehmus.school_management_system.services.user.TeacherService;
 
