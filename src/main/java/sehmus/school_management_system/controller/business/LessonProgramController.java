@@ -2,6 +2,7 @@ package sehmus.school_management_system.controller.business;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import sehmus.school_management_system.payload.requests.concretes.LessonProgramRequest;
@@ -67,4 +68,17 @@ public class LessonProgramController {
         return lessonProgramService.deleteById(id);
 
     }
+
+    @PreAuthorize("hasAnyAuthority('Admin','Dean','ViceDean','Teacher','Student')")
+    @GetMapping("/getLessonProgramByPage")
+    public Page<LessonProgramResponse> getLessonProgramByPage(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            @RequestParam(value = "sort", defaultValue = "day") String sort,
+            @RequestParam(value = "type", defaultValue = "desc") String type){
+
+        return lessonProgramService.getLessonProgramByPage(page,size,sort,type);
+
+    }
+
 }
