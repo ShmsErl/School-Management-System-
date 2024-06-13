@@ -66,4 +66,15 @@ public class EducationTermController {
 
     }
 
+    @PreAuthorize("hasAnyAuthority('Admin','Dean')")
+    @PutMapping("/update/{id}")
+    public ResponseMessage<EducationTermResponse> updateEducationTerm(
+            @PathVariable Long id,
+            @Valid @RequestBody EducationTermRequest educationTermRequest
+    ){
+
+        return educationTermService.updateEducationTerm(id, educationTermRequest);
+
+    }
+
 }
