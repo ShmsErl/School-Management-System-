@@ -89,6 +89,18 @@ public class StudentInfoController {
         return ResponseEntity.ok(studentInfoService.getAllByTeacher(page, size, httpServletRequest));
 
     }
+    @PreAuthorize("hasAnyAuthority('Student')")
+    @GetMapping("/getAllByStudent")
+    public ResponseEntity<Page<StudentInfoResponse>> getAllByStudent(
+            HttpServletRequest httpServletRequest,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size
+    ){
+
+        return ResponseEntity.ok(studentInfoService.getAllByStudent(page, size, httpServletRequest));
+
+    }
+
 
 
 
