@@ -1,5 +1,6 @@
 package sehmus.school_management_system.controller.business;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -11,6 +12,7 @@ import sehmus.school_management_system.payload.responses.concretes.ResponseMessa
 import sehmus.school_management_system.services.business.LessonProgramService;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/lessonProgram")
@@ -80,5 +82,22 @@ public class LessonProgramController {
         return lessonProgramService.getLessonProgramByPage(page,size,sort,type);
 
     }
+
+    @PreAuthorize("hasAnyAuthority('Teacher')")
+    @GetMapping("/getAllLessonProgramByTeacher")
+    public Set<LessonProgramResponse> getAllLessonProgramByTeacherUsername(HttpServletRequest httpServletRequest){
+
+        return lessonProgramService.getAllLessonProgramByTeacherUsername(httpServletRequest);
+
+    }
+
+    @PreAuthorize("hasAnyAuthority('Admin','Dean','ViceDean')")
+    @GetMapping("/getAllLessonProgramByTeacherId/{teacherId}")
+    public Set<LessonProgramResponse> getAllLessonProgramByTeacherId(@PathVariable Long teacherId){
+
+        return lessonProgramService.getAllLessonProgramByTeacherId(teacherId);
+
+    }
+
 
 }
