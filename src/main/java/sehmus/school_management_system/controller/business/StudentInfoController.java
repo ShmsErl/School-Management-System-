@@ -3,6 +3,7 @@ package sehmus.school_management_system.controller.business;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import sehmus.school_management_system.payload.requests.concretes.StudentInfoRequest;
@@ -42,6 +43,19 @@ public class StudentInfoController {
     public ResponseMessage delete(@PathVariable Long id){
 
         return studentInfoService.deleteStudentInfo(id);
+
+    }
+
+    @PreAuthorize("hasAnyAuthority('Admin','Dean','ViceDean')")
+    @GetMapping("/findStudentInfoByPage")
+    public Page<StudentInfoResponse> findStudentInfoByPage(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            @RequestParam(value = "sort", defaultValue = "absentee") String sort,
+            @RequestParam(value = "type", defaultValue = "desc") String type
+    ){
+
+        return studentInfoService.findStudentInfoByPage(page, size, sort, type);
 
     }
 
