@@ -4,9 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import sehmus.school_management_system.payload.requests.concretes.MeetingRequest;
 import sehmus.school_management_system.payload.responses.concretes.MeetingResponse;
 import sehmus.school_management_system.payload.responses.concretes.ResponseMessage;
@@ -25,6 +23,16 @@ public class MeetingController {
                                                          @Valid @RequestBody MeetingRequest meetingRequest){
 
         return meetingService.saveMeeting(httpServletRequest, meetingRequest);
+
+    }
+
+    @PreAuthorize("hasAnyAuthority('Teacher')")
+    @PutMapping("/update/{meetingId}")
+    public ResponseMessage<MeetingResponse> updateMeeting (@RequestBody @Valid MeetingRequest meetingRequest,
+                                                           @PathVariable Long meetingId,
+                                                           HttpServletRequest httpServletRequest){
+
+        return meetingService.updateMeeting(meetingRequest, meetingId, httpServletRequest);
 
     }
 }
