@@ -10,6 +10,8 @@ import sehmus.school_management_system.payload.responses.concretes.MeetingRespon
 import sehmus.school_management_system.payload.responses.concretes.ResponseMessage;
 import sehmus.school_management_system.services.business.MeetingService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/meet")
 @RequiredArgsConstructor
@@ -33,6 +35,14 @@ public class MeetingController {
                                                            HttpServletRequest httpServletRequest){
 
         return meetingService.updateMeeting(meetingRequest, meetingId, httpServletRequest);
+
+    }
+
+    @PreAuthorize("hasAnyAuthority('Admin')")
+    @GetMapping("/getAll")
+    public List<MeetingResponse> getAll(){
+
+        return meetingService.getAll();
 
     }
 }
