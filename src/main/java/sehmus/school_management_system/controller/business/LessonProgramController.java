@@ -99,5 +99,21 @@ public class LessonProgramController {
 
     }
 
+    @PreAuthorize("hasAnyAuthority('Student')")
+    @GetMapping("/getAllLessonProgramByStudent")
+    public Set<LessonProgramResponse> getAllLessonProgramByStudentUsername(HttpServletRequest httpServletRequest){
+
+        return lessonProgramService.getAllLessonProgramByTeacherUsername(httpServletRequest);
+
+    }
+
+    @PreAuthorize("hasAnyAuthority('Admin','Dean','ViceDean')")
+    @GetMapping("/getAllLessonProgramByStudentId/{studentId}")
+    public Set<LessonProgramResponse> getAllLessonProgramByStudentId(@PathVariable Long studentId){
+
+        return lessonProgramService.getAllLessonProgramByStudentId(studentId);
+
+    }
+
 
 }
