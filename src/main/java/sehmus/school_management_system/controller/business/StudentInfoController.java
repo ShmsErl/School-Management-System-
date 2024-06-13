@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import sehmus.school_management_system.payload.requests.concretes.StudentInfoRequest;
@@ -58,6 +59,15 @@ public class StudentInfoController {
         return studentInfoService.findStudentInfoByPage(page, size, sort, type);
 
     }
+
+    @PreAuthorize("hasAnyAuthority('Admin', 'Teacher')")
+    @GetMapping("/getAll/{id}")
+    public ResponseEntity<StudentInfoResponse> getStudentInfoById (@PathVariable Long id){
+
+        return ResponseEntity.ok(studentInfoService.findStudentInfoById(id));
+
+    }
+
 
 
 
