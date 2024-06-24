@@ -2,15 +2,14 @@ package sehmus.school_management_system.payload.requests.abstracts;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 public class BaseUserRequest extends AbstractUserRequest{
 
     @NotNull(message = "Please enter your password!")

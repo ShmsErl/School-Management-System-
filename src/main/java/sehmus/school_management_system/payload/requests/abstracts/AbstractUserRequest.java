@@ -2,9 +2,7 @@ package sehmus.school_management_system.payload.requests.abstracts;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import sehmus.school_management_system.models.enums.Gender;
 
@@ -13,7 +11,8 @@ import java.time.LocalDate;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 public abstract class AbstractUserRequest {
     @NotNull(message = "Please enter your username")
     @Size(min = 4, max = 16,message = "Your username should be at least 4 characters.")
