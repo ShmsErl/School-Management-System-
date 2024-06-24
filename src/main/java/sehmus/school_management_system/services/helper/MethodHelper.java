@@ -1,6 +1,6 @@
 package sehmus.school_management_system.services.helper;
 
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import sehmus.school_management_system.exception.BadRequestException;
@@ -14,7 +14,7 @@ import sehmus.school_management_system.repositories.UserRepository;
 import java.util.List;
 
 @Component
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class MethodHelper {
 
     private final UserRepository userRepository;
